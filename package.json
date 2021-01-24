@@ -75,6 +75,12 @@
       ]
     },
     "menus": {
+      "commandPalette": [
+        {
+          "command": "vscode-vercel.refreshDeployments",
+          "when": "false"
+        }
+      ],
       "view/title": [
         {
           "command": "vscode-vercel.refreshDeployments",
