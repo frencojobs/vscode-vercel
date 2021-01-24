@@ -2,6 +2,7 @@
 // 👆 because vercel API requires snake case keys
 
 import * as polka from 'polka'
+import * as qs from 'querystring'
 import * as vscode from 'vscode'
 import { nanoid } from 'nanoid'
 import axios from 'axios'
@@ -11,10 +12,11 @@ import { TokenManager } from './TokenManager'
 
 export class VercelManager {
   private baseUrl = 'https://api.vercel.com/v2'
-
   private api(path?: string, query?: Record<string, string>) {
     return urlcat(this.baseUrl, path ?? '', query ?? {})
   }
+
+  public constructor(private readonly token: TokenManager) {}
 
   public logIn() {
     const uuid = nanoid()
@@ -34,22 +36,14 @@ export class VercelManager {
       }
 
       try {
-        console.log(this.api('/oauth/access_token'))
-        console.log({
-          client_id: process.env.CLIENT_ID,
-          client_secret: process.env.CLIENT_SECRET,
-          code,
-          redirect_uri: `http://localhost:${process.env.CALLBACK_PORT}/oauth`,
-        })
-
         const response = await axios.post<{ access_token: string }>(
           this.api('/oauth/access_token'),
-          {
+          qs.stringify({
             client_id: process.env.CLIENT_ID,
             client_secret: process.env.CLIENT_SECRET,
             code,
-            redirect_uri: `https://localhost:${process.env.CALLBACK_PORT}/oauth`,
-          },
+            redirect_uri: `http://localhost:${process.env.CALLBACK_PORT}/oauth/callback`,
+          }),
           {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -57,22 +51,16 @@ export class VercelManager {
           }
         )
 
-        console.log('just got response', response)
         if (response.data.access_token) {
-          await TokenManager.setToken(response.data.access_token)
+          await this.token.setToken(response.data.access_token)
           res.end('successfully authenticated! you can close this now')
         }
       } catch (e) {
         console.log(e)
         res.end('error exchanging access token')
       } finally {
-        console.log('before closing server')
         app.server?.close()
       }
-    })
-
-    app.get(`/oauth`, async (_, res) => {
-      res.end(`successfully redirected! you can close this now`)
     })
 
     app.listen(process.env.CALLBACK_PORT, (err: Error) => {

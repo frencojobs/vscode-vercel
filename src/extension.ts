@@ -3,13 +3,17 @@ import * as vscode from 'vscode'
 
 import * as commands from './commands'
 import { CommandManager } from './CommandManager'
+import { TokenManager } from './features/TokenManager'
 import { VercelManager } from './features/VercelManager'
 import DeploymentsProvider from './features/DeploymentsProvider'
 
-export async function activate(context: vscode.ExtensionContext) {
-  dotenv.config()
+dotenv.config()
 
-  const vercel = new VercelManager()
+export async function activate(context: vscode.ExtensionContext) {
+  const token = new TokenManager(context.globalState, (state) => {
+    vscode.commands.executeCommand('setContext', 'vercelLoggedIn', state)
+  })
+  const vercel = new VercelManager(token)
   const deployments = new DeploymentsProvider()
 
   context.subscriptions.push(registerCommands(vercel))

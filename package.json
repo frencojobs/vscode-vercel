@@ -54,7 +54,8 @@
     "viewsWelcome": [
       {
         "view": "vscode-vercel-deployments",
-        "contents": "You have not yet login to view deployments.\n[▲ LogIn with Vercel](command:vscode-vercel.logIn)"
+        "contents": "You have not yet login to view deployments.\n[▲ LogIn with Vercel](command:vscode-vercel.logIn)",
+        "when": "!vercelLoggedIn"
       }
     ],
     "views": {
