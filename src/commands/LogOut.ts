@@ -1,11 +1,10 @@
 import { Command } from '../CommandManager'
+import { VercelManager } from '../features/VercelManager'
 
 export class LogOut implements Command {
   public readonly id = 'vscode-vercel.logOut'
-
-  constructor() {}
-
+  constructor(private readonly vercel: VercelManager) {}
   execute() {
-    console.log('logout')
+    this.vercel.logOut()
   }
 }

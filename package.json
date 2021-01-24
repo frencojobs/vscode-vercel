@@ -27,6 +27,7 @@
   "activationEvents": [
     "onCommand:vscode-vercel.logIn",
     "onCommand:vscode-vercel.logOut",
+    "onCommand:vscode-vercel.refreshDeployments",
     "onView:vscode-vercel-deployments"
   ],
   "contributes": {
@@ -34,12 +35,18 @@
       {
         "command": "vscode-vercel.logIn",
         "category": "VSCode Vercel",
-        "title": "LogIn with Vercel"
+        "title": "Log In with Vercel"
       },
       {
         "command": "vscode-vercel.logOut",
         "category": "VSCode Vercel",
-        "title": "LogOut from Account"
+        "title": "Log Out"
+      },
+      {
+        "command": "vscode-vercel.refreshDeployments",
+        "category": "VSCode Vercel",
+        "title": "Refresh Deployments",
+        "icon": "$(extensions-refresh)"
       }
     ],
     "viewsContainers": {
@@ -54,7 +61,7 @@
     "viewsWelcome": [
       {
         "view": "vscode-vercel-deployments",
-        "contents": "You have not yet login to view deployments.\n[▲ LogIn with Vercel](command:vscode-vercel.logIn)",
+        "contents": "You have not yet logged in to view deployments.\n[▲ Log In with Vercel](command:vscode-vercel.logIn)",
         "when": "!vercelLoggedIn"
       }
     ],
@@ -63,8 +70,16 @@
         {
           "type": "tree",
           "id": "vscode-vercel-deployments",
-          "name": "Deployments",
-          "contextualTitle": "Most Recent Deployments"
+          "name": "Deployments"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-vercel.refreshDeployments",
+          "when": "view == vscode-vercel-deployments",
+          "group": "navigation@0"
         }
       ]
     }
@@ -116,6 +131,7 @@
     "dotenv": "^8.2.0",
     "nanoid": "^3.1.20",
     "polka": "^0.5.2",
+    "timeago.js": "^4.0.2",
     "urlcat": "^2.0.4"
   }
 }

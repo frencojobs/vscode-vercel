@@ -14,7 +14,7 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.executeCommand('setContext', 'vercelLoggedIn', state)
   })
   const vercel = new VercelManager(token)
-  const deployments = new DeploymentsProvider()
+  const deployments = new DeploymentsProvider(vercel)
 
   context.subscriptions.push(registerCommands(vercel))
   context.subscriptions.push(
@@ -28,6 +28,8 @@ export async function activate(context: vscode.ExtensionContext) {
 function registerCommands(vercel: VercelManager): vscode.Disposable {
   const commandManager = new CommandManager()
   commandManager.register(new commands.LogIn(vercel))
-  commandManager.register(new commands.LogOut())
+  commandManager.register(new commands.LogOut(vercel))
+
+  commandManager.register(new commands.RefreshDeployments(vercel))
   return commandManager
 }

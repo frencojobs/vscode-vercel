@@ -8,13 +8,30 @@ import { nanoid } from 'nanoid'
 import axios from 'axios'
 import urlcat from 'urlcat'
 
+import { Deployment } from './models'
 import { TokenManager } from './TokenManager'
 
-export class VercelManager {
-  private baseUrl = 'https://api.vercel.com/v2'
-  private api(path?: string, query?: Record<string, string>) {
+class VercelApi {
+  private static baseUrl = 'https://api.vercel.com'
+  private static api(path?: string, query?: Record<string, string>) {
     return urlcat(this.baseUrl, path ?? '', query ?? {})
   }
+
+  public static get oauth() {
+    return {
+      accessToken: this.api('/v2/oauth/access_token'),
+      authorize: (query: Record<string, string>) =>
+        this.api('/v2/oauth/authorize', query),
+    }
+  }
+
+  public static get deployments() {
+    return this.api('/v5/now/deployments')
+  }
+}
+
+export class VercelManager {
+  public onDidDeploymentsUpdated: () => void = () => {}
 
   public constructor(private readonly token: TokenManager) {}
 
@@ -37,7 +54,7 @@ export class VercelManager {
 
       try {
         const response = await axios.post<{ access_token: string }>(
-          this.api('/oauth/access_token'),
+          VercelApi.oauth.accessToken,
           qs.stringify({
             client_id: process.env.CLIENT_ID,
             client_secret: process.env.CLIENT_SECRET,
@@ -53,6 +70,7 @@ export class VercelManager {
 
         if (response.data.access_token) {
           await this.token.setToken(response.data.access_token)
+          this.onDidDeploymentsUpdated()
           res.end('successfully authenticated! you can close this now')
         }
       } catch (e) {
@@ -70,7 +88,7 @@ export class VercelManager {
         vscode.commands.executeCommand(
           'vscode.open',
           vscode.Uri.parse(
-            this.api('/oauth/authorize', {
+            VercelApi.oauth.authorize({
               client_id: process.env.CLIENT_ID,
               state: uuid,
             })
@@ -78,5 +96,26 @@ export class VercelManager {
         )
       }
     })
+  }
+
+  async logOut() {
+    await this.token.setToken(undefined)
+    this.onDidDeploymentsUpdated()
+  }
+
+  async getDeployments() {
+    if (this.token.getToken()) {
+      const response = await axios.get<{ deployments: Array<Deployment> }>(
+        VercelApi.deployments,
+        {
+          headers: {
+            Authorization: `Bearer ${this.token.getToken()}`,
+          },
+        }
+      )
+      return response.data
+    } else {
+      return { deployments: [] }
+    }
   }
 }

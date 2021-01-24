@@ -1,13 +1,12 @@
 import * as vscode from 'vscode'
 
 const KEY = 'vscode_vercel_token'
-
 export class TokenManager {
   constructor(
     private readonly globalState: vscode.Memento,
     private readonly onAuthStateChanged: (state: boolean) => void
   ) {
-    onAuthStateChanged(false)
+    onAuthStateChanged(!!globalState.get(KEY))
   }
 
   setToken(token: string | undefined) {
