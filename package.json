@@ -79,7 +79,7 @@
         {
           "command": "vscode-vercel.refreshDeployments",
           "when": "view == vscode-vercel-deployments",
-          "group": "navigation@0"
+          "group": "navigation"
         }
       ]
     }

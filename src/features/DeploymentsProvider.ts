@@ -124,6 +124,7 @@ class DeploymentBranchItem extends vscode.TreeItem {
     }
   }
 }
+
 class DeploymentCommitItem extends vscode.TreeItem {
   iconPath = new vscode.ThemeIcon('git-commit')
 

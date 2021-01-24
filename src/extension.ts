@@ -17,12 +17,11 @@ export async function activate(context: vscode.ExtensionContext) {
   const deployments = new DeploymentsProvider(vercel)
 
   context.subscriptions.push(registerCommands(vercel))
-  context.subscriptions.push(
-    vscode.window.registerTreeDataProvider(
-      'vscode-vercel-deployments',
-      deployments
-    )
-  )
+
+  vscode.window.createTreeView('vscode-vercel-deployments', {
+    treeDataProvider: deployments,
+    showCollapseAll: true,
+  })
 }
 
 function registerCommands(vercel: VercelManager): vscode.Disposable {
