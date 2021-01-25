@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // 👆 because vercel API requires all cap keys
 
+export type Team = {
+  id: string
+  slug: string
+  name: string
+}
+
 export type Deployment = {
   uid: string
   name: string
@@ -15,6 +21,7 @@ export type Deployment = {
 export type Meta<T extends Provider> = {
   [K in MetaKeys<T>]: string
 }
+
 type Provider = 'bitbucket' | 'github' | 'gitlab'
 type MetaStates =
   | 'CommitAuthorName'

@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid'
 import axios from 'axios'
 import urlcat from 'urlcat'
 
-import { Deployment } from './models'
+import { Deployment, Team } from './models'
 import { TokenManager } from './TokenManager'
 
 class VercelApi {
@@ -28,10 +28,15 @@ class VercelApi {
   public static get deployments() {
     return this.api('/v5/now/deployments')
   }
+
+  public static get teams() {
+    return this.api('/v1/teams')
+  }
 }
 
 export class VercelManager {
   public onDidDeploymentsUpdated: () => void = () => {}
+  public onDidTeamsUpdated: () => void = () => {}
 
   public constructor(private readonly token: TokenManager) {}
 
@@ -116,6 +121,22 @@ export class VercelManager {
       return response.data
     } else {
       return { deployments: [] }
+    }
+  }
+
+  async getTeams() {
+    if (this.token.getToken()) {
+      const response = await axios.get<{ teams: Array<Team> }>(
+        VercelApi.teams,
+        {
+          headers: {
+            Authorization: `Bearer ${this.token.getToken()}`,
+          },
+        }
+      )
+      return response.data
+    } else {
+      return { teams: [] }
     }
   }
 }
