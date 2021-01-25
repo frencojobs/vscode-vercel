@@ -31,8 +31,11 @@
     "onCommand:vscode-vercel.refreshDeployments",
     "onCommand:vscode-vercel.refreshTeams",
     "onCommand:vscode-vercel.switchTeam",
+    "onCommand:vscode-vercel.refreshProjects",
+    "onCommand:vscode-vercel.switchProject",
     "onView:vscode-vercel-deployments",
-    "onView:vscode-vercel-teams"
+    "onView:vscode-vercel-teams",
+    "onView:vscode-vercel-projects"
   ],
   "contributes": {
     "commands": [
@@ -62,7 +65,19 @@
         "command": "vscode-vercel.switchTeam",
         "category": "VSCode Vercel",
         "title": "Switch Team",
+        "icon": "$(wrench)"
+      },
+      {
+        "command": "vscode-vercel.refreshProjects",
+        "category": "VSCode Vercel",
+        "title": "Refresh Projects",
         "icon": "$(extensions-refresh)"
+      },
+      {
+        "command": "vscode-vercel.switchProject",
+        "category": "VSCode Vercel",
+        "title": "Switch Project",
+        "icon": "$(wrench)"
       }
     ],
     "viewsContainers": {
@@ -92,6 +107,11 @@
           "type": "tree",
           "id": "vscode-vercel-teams",
           "name": "Teams"
+        },
+        {
+          "type": "tree",
+          "id": "vscode-vercel-projects",
+          "name": "Projects"
         }
       ]
     },
@@ -104,6 +124,10 @@
         {
           "command": "vscode-vercel.refreshTeams",
           "when": "false"
+        },
+        {
+          "command": "vscode-vercel.refreshProjects",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -115,6 +139,11 @@
         {
           "command": "vscode-vercel.refreshTeams",
           "when": "view == vscode-vercel-teams",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-vercel.refreshProjects",
+          "when": "view == vscode-vercel-projects",
           "group": "navigation"
         }
       ]

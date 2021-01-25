@@ -1,18 +1,20 @@
+import * as timeago from 'timeago.js'
 import * as vscode from 'vscode'
 
-import { Team } from './models'
+import { Project } from './models'
 import { VercelManager } from './VercelManager'
 
-export class TeamsProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class ProjectsProvider
+  implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<undefined> = new vscode.EventEmitter()
 
   readonly onDidChangeTreeData: vscode.Event<undefined> = this
     ._onDidChangeTreeData.event
 
-  private data: Array<Team> = []
+  private data: Array<Project> = []
   private async updateData() {
-    const res = await this.vercel.getTeams()
-    this.data = res.teams
+    const res = await this.vercel.getProjects()
+    this.data = res.projects
   }
 
   private refresh() {
@@ -20,12 +22,12 @@ export class TeamsProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   }
 
   constructor(private readonly vercel: VercelManager) {
-    this.vercel.onDidTeamsUpdated = () =>
+    this.vercel.onDidProjectsUpdated = () =>
       this.updateData().then(() => this.refresh())
-    this.vercel.onDidTeamSelected = () => this.refresh()
+    this.vercel.onDidProjectSelected = () => this.refresh()
   }
 
-  getTreeItem(element: TeamItem): vscode.TreeItem {
+  getTreeItem(element: ProjectItem): vscode.TreeItem {
     return element
   }
 
@@ -36,21 +38,21 @@ export class TeamsProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 
     return this.data.map(
       (x) =>
-        new TeamItem(
+        new ProjectItem(
           x,
-          !!this.vercel.selectedTeam && this.vercel.selectedTeam === x.id
+          !!this.vercel.selectedProject && this.vercel.selectedProject === x.id
         )
     )
   }
 }
 
-class TeamItem extends vscode.TreeItem {
-  constructor(data: Team, selected: boolean) {
+class ProjectItem extends vscode.TreeItem {
+  constructor(data: Project, selected: boolean) {
     super(data.name)
-    this.description = data.slug
+    this.description = timeago.format(data.updatedAt, 'en_SHORT')
     this.command = {
-      command: 'vscode-vercel.switchTeam',
-      title: 'Switch Vercel Team',
+      command: 'vscode-vercel.switchProject',
+      title: 'Switch Vercel Project',
       arguments: [data.id],
     }
     if (selected) {

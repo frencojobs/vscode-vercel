@@ -4,6 +4,7 @@ import * as vscode from 'vscode'
 import * as commands from './commands'
 import { CommandManager } from './CommandManager'
 import { DeploymentsProvider } from './features/DeploymentsProvider'
+import { ProjectsProvider } from './features/ProjectsProvider'
 import { TeamsProvider } from './features/TeamsProvider'
 import { TokenManager } from './features/TokenManager'
 import { VercelManager } from './features/VercelManager'
@@ -17,8 +18,10 @@ export async function activate(context: vscode.ExtensionContext) {
     },
   })
   const vercel = new VercelManager(token)
+
   const deployments = new DeploymentsProvider(vercel)
   const teams = new TeamsProvider(vercel)
+  const projects = new ProjectsProvider(vercel)
 
   context.subscriptions.push(registerCommands(vercel))
 
@@ -30,15 +33,22 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.window.createTreeView('vscode-vercel-teams', {
     treeDataProvider: teams,
   })
+
+  vscode.window.createTreeView('vscode-vercel-projects', {
+    treeDataProvider: projects,
+  })
 }
 
 function registerCommands(vercel: VercelManager): vscode.Disposable {
   const commandManager = new CommandManager()
+
   commandManager.register(new commands.LogIn(vercel))
   commandManager.register(new commands.LogOut(vercel))
-
-  commandManager.register(new commands.SwitchTeam(vercel))
-  commandManager.register(new commands.RefreshTeams(vercel))
   commandManager.register(new commands.RefreshDeployments(vercel))
+  commandManager.register(new commands.RefreshTeams(vercel))
+  commandManager.register(new commands.SwitchTeam(vercel))
+  commandManager.register(new commands.RefreshProjects(vercel))
+  commandManager.register(new commands.SwitchProject(vercel))
+
   return commandManager
 }

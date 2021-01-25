@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // 👆 because vercel API requires all cap keys
 
+export type Project = {
+  id: string
+  name: string
+  updatedAt: number
+}
+
 export type Team = {
   id: string
   slug: string

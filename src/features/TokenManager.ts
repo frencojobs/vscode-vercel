@@ -3,6 +3,8 @@ import * as vscode from 'vscode'
 export class TokenManager {
   private readonly authKey = 'vscode_vercel_token'
   private readonly teamKey = 'vscode_vercel_selected_team'
+  private readonly projectKey = 'vscode_vercel_selected_project'
+
   private readonly onAuthStateChanged: (state: boolean) => void
 
   constructor(
@@ -34,5 +36,13 @@ export class TokenManager {
 
   getTeam(): string | undefined {
     return this.globalState.get(this.teamKey)
+  }
+
+  setProject(token: string | undefined) {
+    return this.globalState.update(this.projectKey, token)
+  }
+
+  getProject(): string | undefined {
+    return this.globalState.get(this.projectKey)
   }
 }

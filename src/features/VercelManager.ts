@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid'
 import axios from 'axios'
 import urlcat from 'urlcat'
 
-import { Deployment, Team } from './models'
+import { Deployment, Project, Team } from './models'
 import { TokenManager } from './TokenManager'
 
 class VercelApi {
@@ -32,12 +32,20 @@ class VercelApi {
   public static get teams() {
     return this.api('/v1/teams')
   }
+
+  public static get porjects() {
+    return this.api('/v4/projects')
+  }
 }
 
 export class VercelManager {
   public onDidDeploymentsUpdated: () => void = () => {}
+
   public onDidTeamsUpdated: () => void = () => {}
-  public onDidTeamsSelected: () => void = () => {}
+  public onDidTeamSelected: () => void = () => {}
+
+  public onDidProjectsUpdated: () => void = () => {}
+  public onDidProjectSelected: () => void = () => {}
 
   public constructor(private readonly token: TokenManager) {}
 
@@ -115,7 +123,10 @@ export class VercelManager {
   async getDeployments() {
     if (this.token.getAuth()) {
       const response = await axios.get<{ deployments: Array<Deployment> }>(
-        urlcat(VercelApi.deployments, { teamId: this.selectedTeam }),
+        urlcat(VercelApi.deployments, {
+          teamId: this.selectedTeam,
+          projectId: this.selectedProject,
+        }),
         {
           headers: {
             Authorization: `Bearer ${this.token.getAuth()}`,
@@ -154,7 +165,37 @@ export class VercelManager {
     } else {
       await this.token.setTeam(id)
     }
-    this.onDidTeamsSelected()
+    this.onDidTeamSelected()
+    this.onDidDeploymentsUpdated()
+  }
+
+  async getProjects() {
+    if (this.token.getAuth()) {
+      const response = await axios.get<{ projects: Array<Project> }>(
+        VercelApi.porjects,
+        {
+          headers: {
+            Authorization: `Bearer ${this.token.getAuth()}`,
+          },
+        }
+      )
+      return response.data
+    } else {
+      return { projects: [] }
+    }
+  }
+
+  get selectedProject() {
+    return this.token.getProject()
+  }
+
+  async switchProject(id: string) {
+    if (this.selectedProject === id) {
+      await this.token.setProject(undefined)
+    } else {
+      await this.token.setProject(id)
+    }
+    this.onDidProjectSelected()
     this.onDidDeploymentsUpdated()
   }
 }
