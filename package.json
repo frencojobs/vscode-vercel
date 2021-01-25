@@ -101,17 +101,20 @@
         {
           "type": "tree",
           "id": "vscode-vercel-deployments",
-          "name": "Deployments"
+          "name": "Deployments",
+          "visibility": "visible"
         },
         {
           "type": "tree",
           "id": "vscode-vercel-teams",
-          "name": "Teams"
+          "name": "Teams",
+          "visibility": "collapsed"
         },
         {
           "type": "tree",
           "id": "vscode-vercel-projects",
-          "name": "Projects"
+          "name": "Projects",
+          "visibility": "collapsed"
         }
       ]
     },
