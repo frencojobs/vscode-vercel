@@ -47,7 +47,11 @@ export class VercelManager {
   public onDidProjectsUpdated: () => void = () => {}
   public onDidProjectSelected: () => void = () => {}
 
-  public constructor(private readonly token: TokenManager) {}
+  public constructor(private readonly token: TokenManager) {
+    setInterval(() => {
+      this.onDidDeploymentsUpdated()
+    }, 30 * 1000)
+  }
 
   public logIn() {
     const uuid = nanoid()

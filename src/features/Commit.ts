@@ -1,6 +1,6 @@
 /**
  * Referenced from
- * github.com/daneden/zeitgeist/blob/main/Shared/Models/GitCommit.swift
+ * https://github.com/daneden/zeitgeist/blob/main/Shared/Models/GitCommit.swift
  */
 
 import urlcat from 'urlcat'

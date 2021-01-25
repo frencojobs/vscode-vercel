@@ -52,7 +52,7 @@ class DeploymentItem extends vscode.TreeItem {
     switch (data.state) {
       case 'READY':
         this.iconPath = new vscode.ThemeIcon(
-          'circle-filled',
+          'symbol-event',
           new vscode.ThemeColor('charts.green')
         )
         break
