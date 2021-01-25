@@ -119,9 +119,11 @@ export class VercelManager {
   async logOut() {
     await this.token.setAuth(undefined)
     await this.token.setTeam(undefined)
+    await this.token.setProject(undefined)
 
     this.onDidDeploymentsUpdated()
     this.onDidTeamsUpdated()
+    this.onDidProjectsUpdated()
   }
 
   async getDeployments() {
