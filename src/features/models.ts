@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-// 👆 because vercel API requires all cap keys
+// 👆 because vercel API requires ALLCAP keys
 
 export type Project = {
   id: string

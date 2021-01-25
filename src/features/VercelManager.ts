@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-// 👆 because vercel API requires snake case keys
+// 👆 because vercel API requires snake_case keys
 
 import * as polka from 'polka'
 import * as qs from 'querystring'
@@ -11,31 +11,20 @@ import urlcat from 'urlcat'
 import { Deployment, Project, Team } from './models'
 import { TokenManager } from './TokenManager'
 
-class VercelApi {
+class Api {
   private static baseUrl = 'https://api.vercel.com'
-  private static api(path?: string, query?: Record<string, string>) {
+  private static base(path?: string, query?: Record<string, string>) {
     return urlcat(this.baseUrl, path ?? '', query ?? {})
   }
 
-  public static get oauth() {
-    return {
-      accessToken: this.api('/v2/oauth/access_token'),
-      authorize: (query: Record<string, string>) =>
-        this.api('/v2/oauth/authorize', query),
-    }
+  public static oauth = {
+    accessToken: Api.base('/v2/oauth/access_token'),
+    authorize: (query: Record<string, string>) =>
+      Api.base('/v2/oauth/authorize', query),
   }
-
-  public static get deployments() {
-    return this.api('/v5/now/deployments')
-  }
-
-  public static get teams() {
-    return this.api('/v1/teams')
-  }
-
-  public static get porjects() {
-    return this.api('/v4/projects')
-  }
+  public static deployments = Api.base('/v5/now/deployments')
+  public static teams = Api.base('/v1/teams')
+  public static porjects = Api.base('/v4/projects')
 }
 
 export class VercelManager {
@@ -72,7 +61,7 @@ export class VercelManager {
 
       try {
         const response = await axios.post<{ access_token: string }>(
-          VercelApi.oauth.accessToken,
+          Api.oauth.accessToken,
           qs.stringify({
             client_id: process.env.CLIENT_ID,
             client_secret: process.env.CLIENT_SECRET,
@@ -106,7 +95,7 @@ export class VercelManager {
         vscode.commands.executeCommand(
           'vscode.open',
           vscode.Uri.parse(
-            VercelApi.oauth.authorize({
+            Api.oauth.authorize({
               client_id: process.env.CLIENT_ID,
               state: uuid,
             })
@@ -129,7 +118,7 @@ export class VercelManager {
   async getDeployments() {
     if (this.token.getAuth()) {
       const response = await axios.get<{ deployments: Array<Deployment> }>(
-        urlcat(VercelApi.deployments, {
+        urlcat(Api.deployments, {
           teamId: this.selectedTeam,
           projectId: this.selectedProject,
         }),
@@ -147,14 +136,11 @@ export class VercelManager {
 
   async getTeams() {
     if (this.token.getAuth()) {
-      const response = await axios.get<{ teams: Array<Team> }>(
-        VercelApi.teams,
-        {
-          headers: {
-            Authorization: `Bearer ${this.token.getAuth()}`,
-          },
-        }
-      )
+      const response = await axios.get<{ teams: Array<Team> }>(Api.teams, {
+        headers: {
+          Authorization: `Bearer ${this.token.getAuth()}`,
+        },
+      })
       return response.data
     } else {
       return { teams: [] }
@@ -178,7 +164,7 @@ export class VercelManager {
   async getProjects() {
     if (this.token.getAuth()) {
       const response = await axios.get<{ projects: Array<Project> }>(
-        VercelApi.porjects,
+        Api.porjects,
         {
           headers: {
             Authorization: `Bearer ${this.token.getAuth()}`,
