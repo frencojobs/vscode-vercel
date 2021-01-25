@@ -1,20 +1,38 @@
 import * as vscode from 'vscode'
 
-const KEY = 'vscode_vercel_token'
 export class TokenManager {
+  private readonly authKey = 'vscode_vercel_token'
+  private readonly teamKey = 'vscode_vercel_selected_team'
+  private readonly onAuthStateChanged: (state: boolean) => void
+
   constructor(
     private readonly globalState: vscode.Memento,
-    private readonly onAuthStateChanged: (state: boolean) => void
+    {
+      onAuthStateChanged,
+    }: {
+      onAuthStateChanged: (state: boolean) => void
+    }
   ) {
-    onAuthStateChanged(!!globalState.get(KEY))
+    this.onAuthStateChanged = onAuthStateChanged
+
+    // initial run
+    this.onAuthStateChanged(!!globalState.get(this.authKey))
   }
 
-  setToken(token: string | undefined) {
+  setAuth(token: string | undefined) {
     this.onAuthStateChanged(!!token)
-    return this.globalState.update(KEY, token)
+    return this.globalState.update(this.authKey, token)
   }
 
-  getToken(): string | undefined {
-    return this.globalState.get(KEY)
+  getAuth(): string | undefined {
+    return this.globalState.get(this.authKey)
+  }
+
+  setTeam(token: string | undefined) {
+    return this.globalState.update(this.teamKey, token)
+  }
+
+  getTeam(): string | undefined {
+    return this.globalState.get(this.teamKey)
   }
 }

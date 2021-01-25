@@ -9,7 +9,7 @@ import { getCommit } from '../utils/createCommit'
 
 timeago.register('en_SHORT', enShort)
 
-export default class DeploymentsProvider
+export class DeploymentsProvider
   implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<undefined> = new vscode.EventEmitter()
 
@@ -40,7 +40,6 @@ export default class DeploymentsProvider
       ]
     } else {
       const res = await this.vercel.getDeployments()
-      console.log(res)
       return res.deployments.map((x) => new DeploymentItem(x))
     }
   }

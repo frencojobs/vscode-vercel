@@ -37,6 +37,7 @@ class VercelApi {
 export class VercelManager {
   public onDidDeploymentsUpdated: () => void = () => {}
   public onDidTeamsUpdated: () => void = () => {}
+  public onDidTeamsSelected: () => void = () => {}
 
   public constructor(private readonly token: TokenManager) {}
 
@@ -74,7 +75,7 @@ export class VercelManager {
         )
 
         if (response.data.access_token) {
-          await this.token.setToken(response.data.access_token)
+          await this.token.setAuth(response.data.access_token)
           this.onDidDeploymentsUpdated()
           res.end('successfully authenticated! you can close this now')
         }
@@ -104,17 +105,20 @@ export class VercelManager {
   }
 
   async logOut() {
-    await this.token.setToken(undefined)
+    await this.token.setAuth(undefined)
+    await this.token.setTeam(undefined)
+
     this.onDidDeploymentsUpdated()
+    this.onDidTeamsUpdated()
   }
 
   async getDeployments() {
-    if (this.token.getToken()) {
+    if (this.token.getAuth()) {
       const response = await axios.get<{ deployments: Array<Deployment> }>(
-        VercelApi.deployments,
+        urlcat(VercelApi.deployments, { teamId: this.selectedTeam }),
         {
           headers: {
-            Authorization: `Bearer ${this.token.getToken()}`,
+            Authorization: `Bearer ${this.token.getAuth()}`,
           },
         }
       )
@@ -125,12 +129,12 @@ export class VercelManager {
   }
 
   async getTeams() {
-    if (this.token.getToken()) {
+    if (this.token.getAuth()) {
       const response = await axios.get<{ teams: Array<Team> }>(
         VercelApi.teams,
         {
           headers: {
-            Authorization: `Bearer ${this.token.getToken()}`,
+            Authorization: `Bearer ${this.token.getAuth()}`,
           },
         }
       )
@@ -138,5 +142,19 @@ export class VercelManager {
     } else {
       return { teams: [] }
     }
+  }
+
+  get selectedTeam() {
+    return this.token.getTeam()
+  }
+
+  async switchTeam(id: string) {
+    if (this.selectedTeam === id) {
+      await this.token.setTeam(undefined)
+    } else {
+      await this.token.setTeam(id)
+    }
+    this.onDidTeamsSelected()
+    this.onDidDeploymentsUpdated()
   }
 }

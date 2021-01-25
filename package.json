@@ -30,6 +30,7 @@
     "onCommand:vscode-vercel.logOut",
     "onCommand:vscode-vercel.refreshDeployments",
     "onCommand:vscode-vercel.refreshTeams",
+    "onCommand:vscode-vercel.switchTeam",
     "onView:vscode-vercel-deployments",
     "onView:vscode-vercel-teams"
   ],
@@ -55,6 +56,12 @@
         "command": "vscode-vercel.refreshTeams",
         "category": "VSCode Vercel",
         "title": "Refresh Teams",
+        "icon": "$(extensions-refresh)"
+      },
+      {
+        "command": "vscode-vercel.switchTeam",
+        "category": "VSCode Vercel",
+        "title": "Switch Team",
         "icon": "$(extensions-refresh)"
       }
     ],
