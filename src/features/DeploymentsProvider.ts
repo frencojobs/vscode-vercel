@@ -80,26 +80,34 @@ class DeploymentItem extends vscode.TreeItem {
 
 class DeploymentOpenUrlItem extends vscode.TreeItem {
   iconPath = new vscode.ThemeIcon('link')
+  contextValue = 'deployment'
+  url: string
+
   constructor(url: string) {
     super('Open URL')
     this.tooltip = url
+    this.url = 'https://' + url
     this.command = {
       command: 'vscode.open',
       title: 'Open Deployed Site',
-      arguments: [vscode.Uri.parse('https://' + url)],
+      arguments: [vscode.Uri.parse(this.url)],
     }
   }
 }
 
 class DeploymentViewLogItem extends vscode.TreeItem {
   iconPath = new vscode.ThemeIcon('pulse')
+  contextValue = 'deployment'
+  url: string
+
   constructor(url: string, state: string) {
     super('View Logs')
     this.description = state.toLowerCase()
+    this.url = 'https://' + url + '/_logs'
     this.command = {
       command: 'vscode.open',
       title: 'Open Vercel Logs',
-      arguments: [vscode.Uri.parse('https://' + url + '/_logs')],
+      arguments: [vscode.Uri.parse(this.url)],
     }
   }
 }
@@ -112,10 +120,13 @@ class DividerItem extends vscode.TreeItem {
 
 class DeploymentBranchItem extends vscode.TreeItem {
   iconPath = new vscode.ThemeIcon('git-branch')
+  contextValue = 'deployment'
+  url: string
 
   constructor(commit: Commit) {
     super(commit.branch)
     this.description = `${commit.org}/${commit.repo}`
+    this.url = commit.branchUrl
     this.command = {
       command: 'vscode.open',
       title: 'Open Git Branch',
@@ -126,10 +137,13 @@ class DeploymentBranchItem extends vscode.TreeItem {
 
 class DeploymentCommitItem extends vscode.TreeItem {
   iconPath = new vscode.ThemeIcon('git-commit')
+  contextValue = 'deployment'
+  url: string
 
   constructor(commit: Commit) {
     super(commit.message)
     this.description = commit.author
+    this.url = commit.url
     this.command = {
       command: 'vscode.open',
       title: 'Open Git Commit',

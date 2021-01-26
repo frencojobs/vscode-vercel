@@ -44,6 +44,7 @@ function registerCommands(vercel: VercelManager): vscode.Disposable {
 
   commandManager.register(new commands.LogIn(vercel))
   commandManager.register(new commands.LogOut(vercel))
+  commandManager.register(new commands.CopyURL())
   commandManager.register(new commands.RefreshDeployments(vercel))
   commandManager.register(new commands.RefreshTeams(vercel))
   commandManager.register(new commands.SwitchTeam(vercel))

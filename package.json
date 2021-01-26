@@ -28,6 +28,7 @@
   "activationEvents": [
     "onCommand:vscode-vercel.logIn",
     "onCommand:vscode-vercel.logOut",
+    "onCommand:vscode-vercel.copyURL",
     "onCommand:vscode-vercel.refreshDeployments",
     "onCommand:vscode-vercel.refreshTeams",
     "onCommand:vscode-vercel.switchTeam",
@@ -48,6 +49,15 @@
         "command": "vscode-vercel.logOut",
         "category": "VSCode Vercel",
         "title": "Log Out"
+      },
+      {
+        "command": "vscode-vercel.copyURL",
+        "category": "VSCode Vercel",
+        "title": "Copy URL to Clipboard",
+        "icon": {
+          "dark": "resources/icons/dark/copy-to-clipboard.svg",
+          "light": "resources/icons/light/copy-to-clipboard.svg"
+        }
       },
       {
         "command": "vscode-vercel.refreshDeployments",
@@ -129,6 +139,10 @@
           "when": "false"
         },
         {
+          "command": "vscode-vercel.copyURL",
+          "when": "false"
+        },
+        {
           "command": "vscode-vercel.refreshProjects",
           "when": "false"
         }
@@ -148,6 +162,13 @@
           "command": "vscode-vercel.refreshProjects",
           "when": "view == vscode-vercel-projects",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vscode-vercel.copyURL",
+          "when": "view == vscode-vercel-deployments && viewItem == deployment",
+          "group": "inline"
         }
       ]
     }
