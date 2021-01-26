@@ -4,6 +4,7 @@ import * as vscode from 'vscode'
 import * as commands from './commands'
 import { CommandManager } from './CommandManager'
 import { DeploymentsProvider } from './features/DeploymentsProvider'
+import { LogPanelManager } from './features/LogPanelManager'
 import { ProjectsProvider } from './features/ProjectsProvider'
 import { TeamsProvider } from './features/TeamsProvider'
 import { TokenManager } from './features/TokenManager'
@@ -18,12 +19,19 @@ export async function activate(context: vscode.ExtensionContext) {
     },
   })
   const vercel = new VercelManager(token)
+  const logPanelManager = new LogPanelManager(context)
 
   const deployments = new DeploymentsProvider(vercel)
   const teams = new TeamsProvider(vercel)
   const projects = new ProjectsProvider(vercel)
 
-  context.subscriptions.push(registerCommands(vercel))
+  context.subscriptions.push(registerCommands(vercel, logPanelManager))
+  context.subscriptions.push(
+    vscode.window.registerWebviewPanelSerializer(
+      'vscode-vercel.logView',
+      logPanelManager
+    )
+  )
 
   vscode.window.createTreeView('vscode-vercel-deployments', {
     treeDataProvider: deployments,
@@ -39,11 +47,18 @@ export async function activate(context: vscode.ExtensionContext) {
   })
 }
 
-function registerCommands(vercel: VercelManager): vscode.Disposable {
+function registerCommands(
+  vercel: VercelManager,
+  logPanelManager: LogPanelManager
+): vscode.Disposable {
   const commandManager = new CommandManager()
 
   commandManager.register(new commands.LogIn(vercel))
   commandManager.register(new commands.LogOut(vercel))
+
+  commandManager.register(new commands.OpenLogPanel(logPanelManager))
+  commandManager.register(new commands.RefreshLogPanel(logPanelManager))
+
   commandManager.register(new commands.CopyURL())
   commandManager.register(new commands.RefreshDeployments(vercel))
   commandManager.register(new commands.RefreshTeams(vercel))

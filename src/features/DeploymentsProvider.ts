@@ -33,7 +33,11 @@ export class DeploymentsProvider
       const commit = getCommit(element.data)
       return [
         new DeploymentOpenUrlItem(element.data.url),
-        new DeploymentViewLogItem(element.data.url, element.data.state),
+        new DeploymentViewLogItem(
+          element.data.uid,
+          element.data.url,
+          element.data.state
+        ),
         new DividerItem(),
         new DeploymentBranchItem(commit),
         new DeploymentCommitItem(commit),
@@ -100,14 +104,14 @@ class DeploymentViewLogItem extends vscode.TreeItem {
   contextValue = 'deployment'
   url: string
 
-  constructor(url: string, state: string) {
+  constructor(id: string, url: string, state: string) {
     super('View Logs')
     this.description = state.toLowerCase()
     this.url = 'https://' + url + '/_logs'
     this.command = {
-      command: 'vscode.open',
-      title: 'Open Vercel Logs',
-      arguments: [vscode.Uri.parse(this.url)],
+      command: 'vscode-vercel.openLogPanel',
+      title: 'View Vercel Logs',
+      arguments: [id],
     }
   }
 }

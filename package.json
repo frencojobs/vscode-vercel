@@ -28,12 +28,15 @@
   "activationEvents": [
     "onCommand:vscode-vercel.logIn",
     "onCommand:vscode-vercel.logOut",
+    "onCommand:vscode-vercel.openLogPanel",
+    "onCommand:vscode-vercel.refreshLogPanel",
     "onCommand:vscode-vercel.copyURL",
     "onCommand:vscode-vercel.refreshDeployments",
     "onCommand:vscode-vercel.refreshTeams",
     "onCommand:vscode-vercel.switchTeam",
     "onCommand:vscode-vercel.refreshProjects",
     "onCommand:vscode-vercel.switchProject",
+    "onWebView:vscode-vercel.logView",
     "onView:vscode-vercel-deployments",
     "onView:vscode-vercel-teams",
     "onView:vscode-vercel-projects"
@@ -49,6 +52,17 @@
         "command": "vscode-vercel.logOut",
         "category": "VSCode Vercel",
         "title": "Log Out"
+      },
+      {
+        "command": "vscode-vercel.openLogPanel",
+        "category": "VSCode Vercel",
+        "title": "Open Logs"
+      },
+      {
+        "command": "vscode-vercel.refreshLogPanel",
+        "category": "VSCode Vercel",
+        "title": "Refresh Active Log Panel",
+        "icon": "$(extensions-refresh)"
       },
       {
         "command": "vscode-vercel.copyURL",
@@ -139,6 +153,14 @@
           "when": "false"
         },
         {
+          "command": "vscode-vercel.openLogPanel",
+          "when": "false"
+        },
+        {
+          "command": "vscode-vercel.refreshLogPanel",
+          "when": "false"
+        },
+        {
           "command": "vscode-vercel.copyURL",
           "when": "false"
         },
@@ -162,6 +184,13 @@
           "command": "vscode-vercel.refreshProjects",
           "when": "view == vscode-vercel-projects",
           "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "vscode-vercel.refreshLogPanel",
+          "when": "vercelLogViewFocus",
+          "group": "navigation@0"
         }
       ],
       "view/item/context": [
@@ -198,6 +227,8 @@
     "mocha": "^8.1.3",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "ts-loader": "^8.0.11",
     "typescript": "^4.1.2",
     "vscode-test": "^1.4.1",
@@ -212,8 +243,11 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn run package:webview && yarn run package",
+    "compile:webview": "webpack --config ./build/react-webview.webpack.config.js",
     "compile": "webpack --config ./build/node-extension.webpack.config.js",
+    "watch:webview": "webpack --watch --config ./build/react-webview.webpack.config.js",
     "watch": "webpack --watch --config ./build/node-extension.webpack.config.js",
+    "package:webview": "webpack --mode production --devtool hidden-source-map --config ./build/react-webview.webpack.config.js",
     "package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",

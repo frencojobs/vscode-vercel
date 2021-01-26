@@ -1,7 +1,10 @@
 export { LogIn } from './LogIn'
 export { LogOut } from './LogOut'
 
-export { CopyURL } from './copyURL'
+export { OpenLogPanel } from './OpenLogPanel'
+export { RefreshLogPanel } from './RefreshLogPanel'
+
+export { CopyURL } from './CopyURL'
 export { RefreshDeployments } from './RefreshDeployments'
 
 export { RefreshTeams } from './RefreshTeams'
