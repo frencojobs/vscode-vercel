@@ -35,6 +35,7 @@ export class DeploymentsProvider
         new DeploymentOpenUrlItem(element.data.url),
         new DeploymentViewLogItem(
           element.data.uid,
+          element.data.name,
           element.data.url,
           element.data.state
         ),
@@ -104,14 +105,14 @@ class DeploymentViewLogItem extends vscode.TreeItem {
   contextValue = 'deploymentLog'
   url: string
 
-  constructor(id: string, url: string, state: string) {
+  constructor(id: string, name: string, url: string, state: string) {
     super('View Logs')
     this.description = state.toLowerCase()
     this.url = 'https://' + url + '/_logs'
     this.command = {
       command: 'vscode-vercel.openLogPanel',
       title: 'View Vercel Logs',
-      arguments: [id],
+      arguments: [id, name, state],
     }
   }
 }

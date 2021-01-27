@@ -27,7 +27,7 @@ const fetcher = (id: string, accessToken: string) =>
   }).then((res) => res.json())
 
 export const useLog = (id: string, accessToken: string) => {
-  const { data, error } = useSWR(id, (id) => fetcher(id, accessToken))
+  const { data, error } = useSWR(id + '/log', () => fetcher(id, accessToken))
 
   return {
     log: data as Array<DeploymentLog>,

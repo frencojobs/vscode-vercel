@@ -28,6 +28,7 @@ class Api {
 }
 
 export class VercelManager {
+  public onDidLogOut: () => void = () => {}
   public onDidDeploymentsUpdated: () => void = () => {}
 
   public onDidTeamsUpdated: () => void = () => {}
@@ -78,6 +79,8 @@ export class VercelManager {
         if (response.data.access_token) {
           await this.token.setAuth(response.data.access_token)
           this.onDidDeploymentsUpdated()
+          this.onDidTeamsUpdated()
+          this.onDidProjectsUpdated()
           res.end('successfully authenticated! you can close this now')
         }
       } catch (e) {
@@ -110,6 +113,7 @@ export class VercelManager {
     await this.token.setTeam(undefined)
     await this.token.setProject(undefined)
 
+    this.onDidLogOut()
     this.onDidDeploymentsUpdated()
     this.onDidTeamsUpdated()
     this.onDidProjectsUpdated()

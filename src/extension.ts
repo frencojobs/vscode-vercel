@@ -19,7 +19,7 @@ export async function activate(context: vscode.ExtensionContext) {
     },
   })
   const vercel = new VercelManager(token)
-  const logPanelManager = new LogPanelManager(context, token)
+  const logPanelManager = new LogPanelManager(vercel, context, token)
 
   const deployments = new DeploymentsProvider(vercel)
   const teams = new TeamsProvider(vercel)

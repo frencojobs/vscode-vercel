@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { getTime } from './utils/getTime'
 import { useLog } from './hooks/useLog'
+import { useStatus } from './hooks/useStatus'
 
 declare global {
   interface Window {
@@ -17,6 +18,20 @@ declare global {
 const App: React.FC = () => {
   const [state] = useState(window.vscode.getState())
   const { log, isLoading, isError } = useLog(state.id, state.accessToken)
+  const {
+    status,
+    isLoading: isStatusLoading,
+    isError: isStatusError,
+  } = useStatus(state.id, state.accessToken)
+
+  useEffect(() => {
+    if (!isStatusLoading && !isStatusError) {
+      window.vscode.postMessage({
+        command: 'changeStatus',
+        text: status.readyState,
+      })
+    }
+  }, [status])
 
   if (isLoading) {
     return <span>loading...</span>
@@ -45,7 +60,7 @@ const App: React.FC = () => {
               >
                 {getTime(x.created)}
               </td>
-              <td>{x.payload.text}</td>
+              <td className="log-text">{x.payload.text}</td>
             </tr>
           )
         })}

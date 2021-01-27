@@ -24,10 +24,26 @@ export class LogPanel {
       null,
       this.disposables
     )
+
+    this.panel.webview.onDidReceiveMessage(
+      async (message: { command: string; text: string }) => {
+        switch (message.command) {
+          case 'changeStatus':
+            this.panel.iconPath = manager.getIconPathByStatus(message.text)
+            break
+        }
+      },
+      null,
+      this.disposables
+    )
   }
 
   public get isActive() {
     return this.panel.active
+  }
+
+  public kill() {
+    this.panel.dispose()
   }
 
   public revive(column: vscode.ViewColumn | undefined) {

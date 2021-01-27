@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 
 import { LogPanel } from './LogPanel'
 import { TokenManager } from './TokenManager'
+import { VercelManager } from './VercelManager'
 import { getNonce } from '../utils/getNonce'
 
 export class LogPanelManager implements vscode.WebviewPanelSerializer {
@@ -9,13 +10,17 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
   public cache = new Map<string, LogPanel>()
 
   constructor(
+    private readonly vercel: VercelManager,
     private readonly context: vscode.ExtensionContext,
     private readonly token: TokenManager
   ) {
     this.uri = this.context.extensionUri
+    this.vercel.onDidLogOut = () => {
+      this.cache.forEach((x) => x.kill())
+    }
   }
 
-  public async createOrShow(id: string) {
+  public async createOrShow(id: string, name: string, initialStatus: string) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined
@@ -25,7 +30,7 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
     } else {
       const panel = vscode.window.createWebviewPanel(
         LogPanel.viewType,
-        'Vercel',
+        `${name ?? 'vercel'}.log`,
         column || vscode.ViewColumn.One,
         {
           enableScripts: true,
@@ -33,7 +38,7 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
           localResourceRoots: [vscode.Uri.joinPath(this.uri, 'resources')],
         }
       )
-      panel.iconPath = this.iconPath
+      panel.iconPath = this.getIconPathByStatus(initialStatus)
       this.cache.set(id, new LogPanel(id, panel, this))
     }
   }
@@ -47,6 +52,31 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
 
   public dispose(id: string) {
     this.cache.delete(id)
+  }
+
+  private getIconPath(filename: string) {
+    const root = vscode.Uri.joinPath(this.uri, 'resources', 'icons')
+    return {
+      light: vscode.Uri.joinPath(root, 'light', `${filename}.svg`),
+      dark: vscode.Uri.joinPath(root, 'dark', `${filename}.svg`),
+    }
+  }
+
+  public getIconPathByStatus(
+    status: string
+  ): { dark: vscode.Uri; light: vscode.Uri } {
+    switch (status) {
+      case 'READY':
+        return this.getIconPath('symbol-event-green')
+      case 'ERROR':
+      case 'CANCELED':
+        return this.getIconPath('circle-filled-red')
+      case 'BUILDING':
+        return this.getIconPath('circle-filled-yellow')
+      case 'QUEUED':
+      default:
+        return this.getIconPath('circle-outline')
+    }
   }
 
   private getMetaTags(webview: vscode.Webview, nonce: string): string {
@@ -91,14 +121,6 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
       window.vscode = vscode;
     </script>
     <script nonce="${nonce}" src="${reactWebviewUri}"></script>`
-  }
-
-  public get iconPath() {
-    const root = vscode.Uri.joinPath(this.uri, 'resources', 'icons')
-    return {
-      light: vscode.Uri.joinPath(root, 'light', 'vercel.svg'),
-      dark: vscode.Uri.joinPath(root, 'dark', 'vercel.svg'),
-    }
   }
 
   public getHTML(webview: vscode.Webview, state: { id: string }) {
