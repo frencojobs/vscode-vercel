@@ -1,13 +1,17 @@
 import * as vscode from 'vscode'
 
 import { LogPanel } from './LogPanel'
+import { TokenManager } from './TokenManager'
 import { getNonce } from '../utils/getNonce'
 
 export class LogPanelManager implements vscode.WebviewPanelSerializer {
   private readonly uri: vscode.Uri
   public cache = new Map<string, LogPanel>()
 
-  constructor(private readonly context: vscode.ExtensionContext) {
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly token: TokenManager
+  ) {
     this.uri = this.context.extensionUri
   }
 
@@ -36,7 +40,7 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
 
   public async deserializeWebviewPanel(
     webviewPanel: vscode.WebviewPanel,
-    state: { id: string }
+    state: { id: string; accessToken: string }
   ) {
     this.cache.set(state.id, new LogPanel(state.id, webviewPanel, this))
   }
@@ -52,13 +56,14 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
             content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" 
             content="default-src 'none'; 
+                     connect-src 'self' https://api.vercel.com;
                      style-src ${webview.cspSource} 'nonce-${nonce}'; 
                      img-src ${webview.cspSource} https:; 
                      script-src 'nonce-${nonce}';">`
   }
 
   private getStyles(webview: vscode.Webview, uri: vscode.Uri): string {
-    return ['reset.css', 'vscode.css']
+    return ['reset.css', 'vscode.css', 'custom.css']
       .map((x) =>
         webview.asWebviewUri(vscode.Uri.joinPath(uri, 'resources', 'styles', x))
       )
@@ -79,7 +84,10 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
     return `
     <script nonce=${nonce}>
       const vscode = acquireVsCodeApi();
-      vscode.setState(${JSON.stringify(state)})
+      vscode.setState(${JSON.stringify({
+        id: state.id,
+        accessToken: this.token.getAuth(),
+      })})
       window.vscode = vscode;
     </script>
     <script nonce="${nonce}" src="${reactWebviewUri}"></script>`
