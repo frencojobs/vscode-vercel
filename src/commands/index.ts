@@ -4,6 +4,7 @@ export { LogOut } from './LogOut'
 export { OpenLogPanel } from './OpenLogPanel'
 export { RefreshLogPanel } from './RefreshLogPanel'
 
+export { OpenURL } from './OpenURL'
 export { CopyURL } from './CopyURL'
 export { RefreshDeployments } from './RefreshDeployments'
 

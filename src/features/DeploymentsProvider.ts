@@ -101,7 +101,7 @@ class DeploymentOpenUrlItem extends vscode.TreeItem {
 
 class DeploymentViewLogItem extends vscode.TreeItem {
   iconPath = new vscode.ThemeIcon('pulse')
-  contextValue = 'deployment'
+  contextValue = 'deploymentLog'
   url: string
 
   constructor(id: string, url: string, state: string) {
@@ -132,7 +132,7 @@ class DeploymentBranchItem extends vscode.TreeItem {
     this.description = `${commit.org}/${commit.repo}`
     this.url = commit.branchUrl
     this.command = {
-      command: 'vscode.open',
+      command: 'vscode0.open',
       title: 'Open Git Branch',
       arguments: [vscode.Uri.parse(commit.branchUrl)],
     }

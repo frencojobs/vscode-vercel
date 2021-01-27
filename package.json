@@ -65,6 +65,12 @@
         "icon": "$(extensions-refresh)"
       },
       {
+        "command": "vscode-vercel.openURL",
+        "category": "VSCode Vercel",
+        "title": "Open URL in Browser",
+        "icon": "$(globe)"
+      },
+      {
         "command": "vscode-vercel.copyURL",
         "category": "VSCode Vercel",
         "title": "Copy URL to Clipboard",
@@ -161,6 +167,10 @@
           "when": "false"
         },
         {
+          "command": "vscode-vercel.openURL",
+          "when": "false"
+        },
+        {
           "command": "vscode-vercel.copyURL",
           "when": "false"
         },
@@ -190,14 +200,19 @@
         {
           "command": "vscode-vercel.refreshLogPanel",
           "when": "vercelLogViewFocus",
-          "group": "navigation@0"
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
         {
+          "command": "vscode-vercel.openURL",
+          "when": "view == vscode-vercel-deployments && viewItem == deploymentLog",
+          "group": "inline@1"
+        },
+        {
           "command": "vscode-vercel.copyURL",
-          "when": "view == vscode-vercel-deployments && viewItem == deployment",
-          "group": "inline"
+          "when": "view == vscode-vercel-deployments && viewItem == deployment || viewItem == deploymentLog",
+          "group": "inline@2"
         }
       ]
     }
