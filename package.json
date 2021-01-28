@@ -1,6 +1,7 @@
 {
   "name": "vscode-vercel",
   "version": "0.0.1",
+  "preview": true,
   "icon": "resources/icons/vscode-vercel.png",
   "displayName": "VSCode Vercel",
   "description": "Keep an eye on Vercel deployments within Visual Studio Code.",
@@ -22,7 +23,8 @@
     "Other"
   ],
   "keywords": [
-    "vercel"
+    "vercel",
+    "vercel.app"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
