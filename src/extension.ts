@@ -1,4 +1,3 @@
-import * as dotenv from 'dotenv'
 import * as vscode from 'vscode'
 
 import * as commands from './commands'
@@ -9,8 +8,6 @@ import { ProjectsProvider } from './features/ProjectsProvider'
 import { TeamsProvider } from './features/TeamsProvider'
 import { TokenManager } from './features/TokenManager'
 import { VercelManager } from './features/VercelManager'
-
-dotenv.config()
 
 export async function activate(context: vscode.ExtensionContext) {
   const token = new TokenManager(context.globalState, {
