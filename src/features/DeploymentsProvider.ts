@@ -39,7 +39,6 @@ export class DeploymentsProvider
           element.data.url,
           element.data.state
         ),
-        new DividerItem(),
         new DeploymentBranchItem(commit),
         new DeploymentCommitItem(commit),
       ]
@@ -114,12 +113,6 @@ class DeploymentViewLogItem extends vscode.TreeItem {
       title: 'View Vercel Logs',
       arguments: [id, name, state],
     }
-  }
-}
-
-class DividerItem extends vscode.TreeItem {
-  constructor() {
-    super('——')
   }
 }
 
