@@ -1,6 +1,6 @@
 {
   "name": "vscode-vercel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "resources/icons/vscode-vercel.png",
   "displayName": "VSCode Vercel",
   "description": "Keep an eye on Vercel deployments within Visual Studio Code.",
