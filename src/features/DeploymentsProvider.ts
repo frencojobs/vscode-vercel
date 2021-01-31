@@ -30,8 +30,7 @@ export class DeploymentsProvider
 
   async getChildren(element?: DeploymentItem): Promise<Array<vscode.TreeItem>> {
     if (element) {
-      const commit = getCommit(element.data)
-      return [
+      const items = [
         new DeploymentOpenUrlItem(element.data.url),
         new DeploymentViewLogItem(
           element.data.uid,
@@ -39,9 +38,20 @@ export class DeploymentsProvider
           element.data.url,
           element.data.state
         ),
-        new DeploymentBranchItem(commit),
-        new DeploymentCommitItem(commit),
       ]
+
+      if (Object.keys(element.data.meta).length !== 0) {
+        const commit = getCommit(element.data.meta)
+
+        items.push(
+          ...[
+            new DeploymentBranchItem(commit),
+            new DeploymentCommitItem(commit),
+          ]
+        )
+      }
+
+      return items
     } else {
       const res = await this.vercel.getDeployments()
       return res.deployments.map((x) => new DeploymentItem(x))

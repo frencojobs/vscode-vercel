@@ -1,13 +1,13 @@
 import { Commit } from '../features/Commit'
-import { Deployment, Meta } from '../features/models'
+import { Meta } from '../features/models'
 import { getProvider } from './getProvider'
 
-export function getCommit(x: Deployment) {
-  const provider = getProvider(x.meta as Record<string, string>)
+export function getCommit(input: Record<string, string>) {
+  const provider = getProvider(input)
 
   switch (provider) {
     case 'bitbucket': {
-      const meta = x.meta as Meta<'bitbucket'>
+      const meta = input as Meta<'bitbucket'>
       return new Commit(
         provider,
         meta.bitbucketCommitSha,
@@ -19,7 +19,7 @@ export function getCommit(x: Deployment) {
       )
     }
     case 'github': {
-      const meta = x.meta as Meta<'github'>
+      const meta = input as Meta<'github'>
       return new Commit(
         provider,
         meta.githubCommitSha,
@@ -31,7 +31,7 @@ export function getCommit(x: Deployment) {
       )
     }
     case 'gitlab': {
-      const meta = x.meta as Meta<'gitlab'>
+      const meta = input as Meta<'gitlab'>
       return new Commit(
         provider,
         meta.gitlabCommitSha,

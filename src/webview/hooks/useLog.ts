@@ -8,7 +8,7 @@ interface DeploymentLog {
     info: {
       name: string
       type: string
-      readyStaet: string
+      readyState: string
       entrypoint: string
     }
     id: string

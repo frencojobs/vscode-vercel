@@ -1,5 +1,5 @@
-export function getProvider(x: unknown) {
-  const firstKey = Object.keys(x as Record<string, string>)[0]
+export function getProvider(input: Record<string, string>) {
+  const firstKey = Object.keys(input)[0]
   if (firstKey.includes('bitbucket')) {
     return 'bitbucket' as const
   } else if (firstKey.includes('github')) {
