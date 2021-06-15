@@ -1,3 +1,8 @@
+## 1.0.3
+
+- Fix error caused by meta not containing all required properties
+- Add separate visual state for canceled deployments
+
 ## 1.0.2
 
 - Fix meta undefined error by making git tree rows optional
