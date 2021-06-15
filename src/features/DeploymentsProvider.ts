@@ -73,10 +73,15 @@ class DeploymentItem extends vscode.TreeItem {
         )
         break
       case 'ERROR':
-      case 'CANCELED':
         this.iconPath = new vscode.ThemeIcon(
           'circle-filled',
           new vscode.ThemeColor('charts.red')
+        )
+        break
+      case 'CANCELED':
+        this.iconPath = new vscode.ThemeIcon(
+          'circle-filled',
+          new vscode.ThemeColor('charts.gray')
         )
         break
       case 'BUILDING':

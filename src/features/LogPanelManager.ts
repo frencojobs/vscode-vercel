@@ -69,8 +69,9 @@ export class LogPanelManager implements vscode.WebviewPanelSerializer {
       case 'READY':
         return this.getIconPath('symbol-event-green')
       case 'ERROR':
-      case 'CANCELED':
         return this.getIconPath('circle-filled-red')
+      case 'CANCELED':
+        return this.getIconPath('circle-filled-gray')
       case 'BUILDING':
         return this.getIconPath('circle-filled-yellow')
       case 'QUEUED':
