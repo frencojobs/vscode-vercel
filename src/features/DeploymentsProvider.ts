@@ -43,12 +43,14 @@ export class DeploymentsProvider
       if (Object.keys(element.data.meta).length !== 0) {
         const commit = getCommit(element.data.meta)
 
-        items.push(
-          ...[
-            new DeploymentBranchItem(commit),
-            new DeploymentCommitItem(commit),
-          ]
-        )
+        if (commit !== null) {
+          items.push(
+            ...[
+              new DeploymentBranchItem(commit),
+              new DeploymentCommitItem(commit),
+            ]
+          )
+        }
       }
 
       return items
