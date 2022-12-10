@@ -1,6 +1,6 @@
 {
   "name": "vscode-vercel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "icon": "resources/icons/vscode-vercel.png",
   "displayName": "VSCode Vercel",
   "description": "Keep an eye on Vercel deployments within Visual Studio Code.",
@@ -25,7 +25,7 @@
     "vercel",
     "vercel.app"
   ],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "activationEvents": [
     "onCommand:vscode-vercel.logIn",
     "onCommand:vscode-vercel.logOut",
@@ -43,6 +43,16 @@
     "onView:vscode-vercel-projects"
   ],
   "contributes": {
+    "configuration": {
+      "title": "VSCode Vercel",
+      "properties": {
+        "vscode-vercel.AccessToken": {
+          "type": "string",
+          "default": "",
+          "description": "Your Vercel Access Token(found at https://vercel.com/account/tokens)."
+        }
+      }
+    },
     "commands": [
       {
         "command": "vscode-vercel.logIn",
@@ -223,7 +233,8 @@
     "nanoid": "^3.1.20",
     "polka": "^0.5.2",
     "timeago.js": "^4.0.2",
-    "urlcat": "^2.0.4"
+    "urlcat": "^2.0.4",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",
