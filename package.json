@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.74.0"
   },
   "categories": [
     "Other"
@@ -25,7 +25,7 @@
     "vercel",
     "vercel.app"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "activationEvents": [
     "onCommand:vscode-vercel.logIn",
     "onCommand:vscode-vercel.logOut",
@@ -229,39 +229,39 @@
     }
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "nanoid": "^3.1.20",
+    "axios": "^0.21.4",
+    "nanoid": "^3.3.4",
     "polka": "^0.5.2",
     "timeago.js": "^4.0.2",
     "urlcat": "^2.0.4",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
-    "@types/glob": "^7.1.3",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^12.11.7",
-    "@types/node-fetch": "^2.5.7",
-    "@types/polka": "^0.5.2",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/vscode": "^1.52.0",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
-    "@typescript-eslint/parser": "^4.9.0",
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^8.2.3",
+    "@types/node": "^12.20.55",
+    "@types/node-fetch": "^2.6.2",
+    "@types/polka": "^0.5.4",
+    "@types/react": "^17.0.52",
+    "@types/react-dom": "^17.0.18",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "dotenv-webpack": "4.0.0",
-    "eslint": "^7.15.0",
-    "glob": "^7.1.6",
+    "eslint": "^7.32.0",
+    "glob": "^7.2.3",
     "import-sort-style-absolute": "^1.0.1",
-    "mocha": "^8.1.3",
-    "prettier": "^2.2.1",
+    "mocha": "^8.4.0",
+    "prettier": "^2.8.1",
     "prettier-plugin-import-sort": "^0.0.6",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "swr": "^0.4.0",
-    "ts-loader": "^8.0.11",
-    "typescript": "^4.1.2",
-    "vscode-test": "^1.4.1",
-    "webpack": "^4.2.6",
-    "webpack-cli": "^3.2.3"
+    "react-dom": "^17.0.2",
+    "swr": "^0.4.2",
+    "ts-loader": "^8.4.0",
+    "typescript": "^4.9.4",
+    "vscode-test": "^1.6.1",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
@@ -271,12 +271,12 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn run package:webview && yarn run package",
-    "compile:webview": "webpack --config ./build/react-webview.webpack.config.js",
-    "compile": "webpack --config ./build/node-extension.webpack.config.js",
-    "watch:webview": "webpack --watch --config ./build/react-webview.webpack.config.js",
-    "watch": "webpack --watch --config ./build/node-extension.webpack.config.js",
-    "package:webview": "webpack --mode production --devtool hidden-source-map --config ./build/react-webview.webpack.config.js",
-    "package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
+    "compile:webview": "NODE_OPTIONS=--openssl-legacy-provider webpack --config ./build/react-webview.webpack.config.js",
+    "compile": "NODE_OPTIONS=--openssl-legacy-provider webpack --config ./build/node-extension.webpack.config.js",
+    "watch:webview": "NODE_OPTIONS=--openssl-legacy-provider webpack --watch --config ./build/react-webview.webpack.config.js",
+    "watch": "NODE_OPTIONS=--openssl-legacy-provider webpack --watch --config ./build/node-extension.webpack.config.js",
+    "package:webview": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production --devtool hidden-source-map --config ./build/react-webview.webpack.config.js",
+    "package": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "pretest": "yarn run test-compile && yarn run lint",
