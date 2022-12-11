@@ -1,8 +1,12 @@
-# VSCode Vercel
+# VSCode Vercel V2
 
 Keep an eye on ▲ Vercel deployments without ever leaving Visual Studio Code.
 
 <img align="center" src="https://raw.githubusercontent.com/frencojobs/vscode-vercel/main/.github/demo.png" />
+
+## Setup
+
+Simply set vercel-vscode.AccessToken to the value gotten by going to [https://vercel.com/account/tokens](https://vercel.com/account/tokens) and clicking create.
 
 ## Features
 
@@ -12,8 +16,10 @@ Here is a list of features the extension currently supports.
 - ✅ View (real-time) logs with a webview
 - 🔎 Filter the deployment statuses based on teams & projects
 
-_This is a participating project for the [Vercel Hashnode Hackathon](https://townhall.hashnode.com/announcing-hashnode-hackathon-powered-by-vercel). View the full story about the project as an article [here](https://frenco.hashnode.dev/vscode-vercel-an-extension-for-your-favorite-code-editor-ckkgl99di0341rzs18nzufakj)._
+This is an updated version of [frencojobs' vscode-vercel](https://github.com/frencojobs/vscode-vercel)
 
-## License
+## Important!
 
-MIT © Frenco
+I can not and am not promising repairation of any features that were broken in the original. I only updated the authentication script to get the token from settings.json instead of the now depreciated Oauth V2 provided by Vercel.
+
+I have not, and don't plan to, attempted to repair the display of the logs, I am simply bringing life back to an old, yet, useful extension. If you would like to fix problems, such as the above, please feel free to fork this repo and submit a pull request.
