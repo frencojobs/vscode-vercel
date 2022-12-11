@@ -33,15 +33,17 @@ export class VercelManager {
     }, 30 * 1000)
   }
 
-  public async logIn(apiToken: string): Promise<void> {
-      try {
-          await this.token.setAuth(apiToken)
-          this.onDidDeploymentsUpdated()
-          this.onDidTeamsUpdated()
-          this.onDidProjectsUpdated()
-      } catch (e) {
-        console.log(e)
-      }
+  public async logIn(apiToken: string): Promise<boolean> {
+    try {
+      await this.token.setAuth(apiToken)
+      this.onDidDeploymentsUpdated()
+      this.onDidTeamsUpdated()
+      this.onDidProjectsUpdated()
+      return true
+    } catch (e) {
+      console.log(e)
+      return false
+    }
   }
 
   async logOut() {
