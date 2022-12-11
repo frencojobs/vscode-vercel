@@ -273,7 +273,7 @@
   "scripts": {
     "vscode:prepublish": "yarn run package:webview && yarn run package",
     "compile:webview": "NODE_OPTIONS=--openssl-legacy-provider webpack --config ./build/react-webview.webpack.config.js",
-    "compile": "rm -r ./dist && NODE_OPTIONS=--openssl-legacy-provider webpack --config ./build/node-extension.webpack.config.js",
+    "compile": "rm -r ./dist 2>/dev/null ; NODE_OPTIONS=--openssl-legacy-provider webpack --config ./build/node-extension.webpack.config.js",
     "watch:webview": "NODE_OPTIONS=--openssl-legacy-provider webpack --watch --config ./build/react-webview.webpack.config.js",
     "watch": "NODE_OPTIONS=--openssl-legacy-provider webpack --watch --config ./build/node-extension.webpack.config.js",
     "package:webview": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production --devtool hidden-source-map --config ./build/react-webview.webpack.config.js",
